@@ -24,12 +24,18 @@
         <td>Address</td>
 
     </tr>
-    <c:forEach items='${requestScope["danhsach"]}' var="customer">
+
+    //lặp
+    <c:forEach items='${requestScope["danhsach"]}' var="khachhang">
         <tr>
-            <td><a href="/customers?action=view&id=${customer.getId()}">${customer.getName()}</a></td>
-            <td>${customer.getEmail()}</td>
-            <td>${customer.getAddress()}</td>
+            <td>${khachhang.getName()}</td>
+            <td>${khachhang.getEmail()}</td>
+            <td>${khachhang.getAddress()}</td>
+        </tr>
+
     </c:forEach>
+
+
 </table>
 </body>
 </html>
