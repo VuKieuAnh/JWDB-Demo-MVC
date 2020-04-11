@@ -2,16 +2,17 @@ package service;
 
 import model.Customer;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerService {
-    List<Customer> findAll();
+    public List<Customer> findAll();
 
-    void save(Customer customer);
+    public void save(Customer customer) throws SQLException;
 
-    Customer findById(int id);
+    public Customer findById(int id);
 
-    void update(int id, Customer customer);
+    public boolean update(int id, Customer customer) throws SQLException;
 
-    void remove(int id);
+    public boolean remove(int id) throws SQLException;
 }

@@ -2,44 +2,80 @@ package service;
 
 import model.Customer;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CustomerServiceImpl implements CustomerService{
-    private static Map<Integer, Customer> customers;
+    private String jdbcUrl= "jdbc:mysql://localhost:3308/democ12";
+    private String userSql = "root";
+    private String passSql = "123456";
 
-    static {
-        customers = new HashMap<>();
-        customers.put(1, new Customer(1, "Doan", "doan@codegym.vn", "Hanoi"));
-        customers.put(2, new Customer(2, "Hien", "hien@codegym.vn", "Danang"));
-        customers.put(3, new Customer(3, "Loi", "loi@codegym.vn", "Saigon"));
-        customers.put(4, new Customer(4, "Phong", "phong@codegym.vn", "Beijin"));
+    protected Connection getConnection() {
+        Connection connection = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection(jdbcUrl, userSql, passSql);
+        } catch (SQLException e) {
+            System.out.println("KHông kết nối");
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return connection;
     }
-
     @Override
     public List<Customer> findAll() {
-        return new ArrayList<>(customers.values());
+        List<Customer> list = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM customer");) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                String email = resultSet.getString(3);
+                String ad = resultSet.getString(4);
+                Customer customer = new Customer(id, name, email, ad);
+                list.add(customer);
+            }
+
+        }
+        catch (SQLException e){
+            System.out.println(e);
+        }
+        return list;
     }
 
     @Override
-    public void save(Customer customer) {
-        customers.put(customer.getId(), customer);
+    public void save(Customer customer) throws SQLException {
+        try (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("insert into customer (name, email, address) value (?, ?, ?)")){
+            statement.setString(1, customer.getName());
+            statement.setString(2, customer.getEmail());
+            statement.setString(3, customer.getAddress());
+            statement.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println(e);
+        }
     }
 
     @Override
     public Customer findById(int id) {
-        return customers.get(id);
+        return null;
     }
 
     @Override
-    public void update(int id, Customer customer) {
-        customers.put(id, customer);
+    public boolean update(int id, Customer customer) throws SQLException {
+        return false;
     }
 
     @Override
-    public void remove(int id) {
-        customers.remove(id);
+    public boolean remove(int id) throws SQLException {
+        return false;
     }
 }

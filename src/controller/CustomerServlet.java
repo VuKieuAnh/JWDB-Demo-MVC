@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(name = "CustomerServlet", urlPatterns = "/customers")
@@ -23,7 +24,11 @@ public class CustomerServlet extends javax.servlet.http.HttpServlet {
         }
         switch (ac){
             case "create":
-                createCustomer(request, response);
+                try {
+                    createCustomer(request, response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -73,12 +78,11 @@ public class CustomerServlet extends javax.servlet.http.HttpServlet {
         }
     }
 
-    private void createCustomer(HttpServletRequest request, HttpServletResponse response) {
+    private void createCustomer(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String address = request.getParameter("address");
-        int id = (int)(Math.random() * 10000);
-        Customer customer = new Customer(id, name, email, address);
+        Customer customer = new Customer(name, email, address);
         this.customerService.save(customer);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("create.jsp");
