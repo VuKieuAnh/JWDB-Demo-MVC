@@ -48,11 +48,23 @@ public class CustomerServlet extends javax.servlet.http.HttpServlet {
                 break;
             case "view":
                 break;
+            case "addUpdate":
+                try {
+                    addUpdate(request, response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 listCustomers(request, response);
                 break;
         }
     }
+
+    private void addUpdate(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        this.customerService.addAndUpdateTransaction();
+    }
+
     private void listCustomers(HttpServletRequest request, HttpServletResponse response) {
         List<Customer> customers = this.customerService.findAll();
         request.setAttribute("danhsach", customers);

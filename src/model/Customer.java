@@ -5,6 +5,7 @@ public class Customer {
     private String name;
     private String email;
     private String address;
+    private int country_id;
 
     public Customer() {
     }
@@ -13,6 +14,21 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.address = address;
+    }
+
+    public Customer(String name, String email, String address, int country_id) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.country_id = country_id;
+    }
+
+    public int getCountry_id() {
+        return country_id;
+    }
+
+    public void setCountry_id(int country_id) {
+        this.country_id = country_id;
     }
 
     public Customer(int id, String name, String email, String address) {

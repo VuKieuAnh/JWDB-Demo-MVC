@@ -15,4 +15,6 @@ public interface CustomerService {
     public boolean update(int id, Customer customer) throws SQLException;
 
     public boolean remove(int id) throws SQLException;
+
+    public void addAndUpdateTransaction() throws SQLException;
 }
