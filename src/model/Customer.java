@@ -6,14 +6,31 @@ public class Customer {
     private String email;
     private String address;
     private int country_id;
+    private String country_name;
 
     public Customer() {
+    }
+
+    public String getCountry_name() {
+        return country_name;
+    }
+
+    public void setCountry_name(String country_name) {
+        this.country_name = country_name;
     }
 
     public Customer(String name, String email, String address) {
         this.name = name;
         this.email = email;
         this.address = address;
+    }
+
+    public Customer(int id, String name, String email, String address, String country_name) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.country_name = country_name;
     }
 
     public Customer(String name, String email, String address, int country_id) {

@@ -32,14 +32,16 @@ public class CustomerServiceImpl implements CustomerService{
     public List<Customer> findAll() {
         List<Customer> list = new ArrayList<>();
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM customer");) {
+             PreparedStatement statement = connection.prepareStatement("select customer.id, customer.name, customer.email, customer.address, country.name from customer inner join country on customer.country_id = country.id");) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
                 int id = resultSet.getInt(1);
                 String name = resultSet.getString(2);
                 String email = resultSet.getString(3);
                 String ad = resultSet.getString(4);
-                Customer customer = new Customer(id, name, email, ad);
+                String country = resultSet.getString(5);
+
+                Customer customer = new Customer(id, name, email, ad, country);
                 list.add(customer);
             }
 
@@ -118,6 +120,31 @@ public class CustomerServiceImpl implements CustomerService{
             }
         }
 
+    }
+
+    @Override
+    public List<Customer> findByCountryID(int country_id){
+        List<Customer> list = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("select customer.id, customer.name, customer.email, customer.address, country.name from customer inner join country on customer.country_id = country.id where customer.country_id = ?");) {
+            statement.setInt(1, country_id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                String email = resultSet.getString(3);
+                String ad = resultSet.getString(4);
+                String country = resultSet.getString(5);
+
+                Customer customer = new Customer(id, name, email, ad, country);
+                list.add(customer);
+            }
+
+        }
+        catch (SQLException e){
+            System.out.println(e);
+        }
+        return list;
     }
 
 }

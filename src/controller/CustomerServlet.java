@@ -1,9 +1,13 @@
 package controller;
 
+import model.Country;
 import model.Customer;
+import service.CountryService;
+import service.CountryServiceImpl;
 import service.CustomerService;
 import service.CustomerServiceImpl;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +21,7 @@ import java.util.List;
 public class CustomerServlet extends javax.servlet.http.HttpServlet {
 
     private CustomerService customerService = new CustomerServiceImpl();
+    private CountryService countryService = new CountryServiceImpl();
     protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         String ac = request.getParameter("action");
         if (ac == null){
@@ -35,6 +40,7 @@ public class CustomerServlet extends javax.servlet.http.HttpServlet {
 
     protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         String action = request.getParameter("action");
+
         if(action == null){
             action = "";
         }
@@ -55,9 +61,29 @@ public class CustomerServlet extends javax.servlet.http.HttpServlet {
                     e.printStackTrace();
                 }
                 break;
+            case "search":
+                searchGet(request, response);
+            break;
             default:
                 listCustomers(request, response);
                 break;
+        }
+    }
+
+    private void searchGet(HttpServletRequest request, HttpServletResponse response) {
+        Integer searchName = Integer.parseInt(request.getParameter("country"));
+        List<Customer> customers = this.customerService.findByCountryID(searchName);
+        request.setAttribute("danhsach", customers);
+        List<Country> countries = this.countryService.findAll();
+        request.setAttribute("countries", countries);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -68,6 +94,8 @@ public class CustomerServlet extends javax.servlet.http.HttpServlet {
     private void listCustomers(HttpServletRequest request, HttpServletResponse response) {
         List<Customer> customers = this.customerService.findAll();
         request.setAttribute("danhsach", customers);
+        List<Country> countries = this.countryService.findAll();
+        request.setAttribute("countries", countries);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
         try {

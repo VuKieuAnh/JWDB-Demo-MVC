@@ -17,4 +17,5 @@ public interface CustomerService {
     public boolean remove(int id) throws SQLException;
 
     public void addAndUpdateTransaction() throws SQLException;
+    public List<Customer> findByCountryID(int country_id);
 }
